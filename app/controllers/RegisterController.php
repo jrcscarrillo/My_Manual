@@ -59,6 +59,5 @@ class RegisterController extends ControllerBase
         }
 
         $this->view->form = $form;
-        $this->view->setLayoutsDir = '/app/views/layouts/';
     }
 }
