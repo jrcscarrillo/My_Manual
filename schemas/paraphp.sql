@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.1.50, for apple-darwin10.4.0 (i386)
 --
--- Host: 127.0.0.1    Database: invo
+-- Host: 127.0.0.1    Database: paraphp
 -- ------------------------------------------------------
 -- Server version	5.1.50
 
@@ -139,7 +139,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'demo','c0bd96dc7ea4ec56741a4e07f6ce98012814d853','Phalcon Demo','demo@phalconphp.com','2012-04-10 20:53:03','Y');
+INSERT INTO `users` VALUES (1,'jrcs','','Phalcon Demo','info@carrillosteam.com','2017-02-09 10:53:03','Y');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

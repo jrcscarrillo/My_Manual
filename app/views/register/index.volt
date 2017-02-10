@@ -1,14 +1,16 @@
-
-{{ content() }}
+{% extends "layouts/principal.volt" %}
+{% block cuerpo %}
 
 <div class="page-header">
-    <h2>Register for INVO</h2>
+    <br>
+    <h2>Register for MY MANUAL</h2>
 </div>
-
+<div class="body">
 {{ form('register', 'id': 'registerForm', 'onbeforesubmit': 'return false') }}
 
     <fieldset>
-
+<div class="row">
+<section class="col col-6">
         <div class="control-group">
             {{ form.label('name', ['class': 'control-label']) }}
             <div class="controls">
@@ -19,7 +21,7 @@
                 </div>
             </div>
         </div>
-
+</section>
         <div class="control-group">
             {{ form.label('username', ['class': 'control-label']) }}
             <div class="controls">
@@ -67,6 +69,8 @@
             {{ submit_button('Register', 'class': 'btn btn-primary', 'onclick': 'return SignUp.validate();') }}
             <p class="help-block">By signing up, you accept terms of use and privacy policy.</p>
         </div>
-
+</div>
     </fieldset>
 </form>
+</div>
+{% endblock %}

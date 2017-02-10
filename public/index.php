@@ -23,7 +23,6 @@ try {
     require APP_PATH . 'app/config/loader.php';
 
     $application = new Application(new Services($config));
-
     // NGINX - PHP-FPM already set PATH_INFO variable to handle route
     echo $application->handle(!empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : null)->getContent();
 } catch (Exception $e){
