@@ -1,4 +1,3 @@
-{% extends "layouts/principal.volt" %}
 {% block cuerpo %}
 
 <div class="page-header">

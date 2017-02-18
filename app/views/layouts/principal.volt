@@ -19,20 +19,20 @@
         <link rel="stylesheet" href="http://ventasloscoqueiros.com/css/footer.css">
     </head>
     <body class="bg-blue" id="cuerpito">
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">CarrillosTeam</a>
-                </div>
-
-            </div>
-        </nav>        
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Carrillos Team</a>
+        </div>
+        {{ elements.getMenu() }}
+    </div>
+</nav>      
 {% block cuerpo %}{% endblock %}
         <footer>
             <div class="container">
@@ -57,7 +57,7 @@
                             <li><a href="#"> Frequently Ask Questions</a></li>
                         </ul>
                     </div>
-                    <div class="col-md-3 col-sm-6 paddingtop-bottom">
+                    <div class="col-md-2 col-sm-6 paddingtop-bottom">
                         <h6 class="heading7"></h6>
                         <ul class="footer-ul">
                         <li><a href="#">webenlance.com</a></li>
