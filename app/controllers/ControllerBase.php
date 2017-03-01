@@ -4,10 +4,9 @@ use Phalcon\Mvc\Controller;
 
 class ControllerBase extends Controller
 {
-
-    protected function initialize()
-    {
-        $this->tag->prependTitle('My Manual | ');
-//        $this->view->setTemplateAfter('main');
-    }
+  protected function initialize()
+  {
+//      $this->tag->prependTitle('KNOLL | ');
+//      $this->view->setTemplateAfter('main');
+  }
 }

@@ -16,10 +16,6 @@ class Elements extends Component
                 'caption' => 'Home',
                 'action' => 'index'
             ),
-            'invoices' => array(
-                'caption' => 'Invoices',
-                'action' => 'index'
-            ),
             'about' => array(
                 'caption' => 'About',
                 'action' => 'index'
@@ -27,7 +23,11 @@ class Elements extends Component
             'contact' => array(
                 'caption' => 'Contact',
                 'action' => 'index'
-            ),
+            ),          
+            'yourcode' => array(
+                'caption' => 'Your Code',
+                'action' => 'index'
+            ),          
         ),
         'navbar-right' => array(
             'session' => array(
@@ -38,11 +38,16 @@ class Elements extends Component
     );
 
     private $_tabs = array(
-        'Invoices' => array(
-            'controller' => 'invoices',
+        'Yourcode' => array(
+            'controller' => 'yourcode',
             'action' => 'index',
-            'any' => false
+            'any' => true
         ),
+            'Developers' => array(
+                'controller' => 'developers',
+                'caption' => 'Developers',
+                'action' => 'index'
+            ),
         'Companies' => array(
             'controller' => 'companies',
             'action' => 'index',
@@ -80,7 +85,7 @@ class Elements extends Component
                 'action' => 'end'
             );
         } else {
-            unset($this->_headerMenu['navbar-left']['invoices']);
+            unset($this->_headerMenu['navbar-left']['yourcode']);
         }
 
         $controllerName = $this->view->getControllerName();

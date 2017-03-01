@@ -1,4 +1,4 @@
-{% extends "layouts/principal.volt" %}
+{% extends "layouts/main.volt" %}
 {% block cuerpo %}
         {{ content() }}
  {% endblock %}

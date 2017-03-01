@@ -3,36 +3,31 @@
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 
-/**
- * ProductsController
- *
- * Manage CRUD operations for products
- */
-class ProductsController extends ControllerBase
+class YourcodeController extends ControllerBase
 {
     public function initialize()
     {
-        $this->tag->setTitle('Manage your products');
+        $this->tag->setTitle('Manage your code');
         parent::initialize();
     }
 
-    /**
-     * Shows the index action
-     */
     public function indexAction()
     {
-        $this->session->conditions = null;
-        $this->view->form = new ProductsForm;
-    }
+//        $this->session->conditions = null;
+//        console.log("index action I");
+//        $this->view->form = new YourcodeForm;
+//        if ($this->request->isPost()){
+//            print_r($this->request());
+//        }
+//    
+//        console.log("index action F");
+        }
 
-    /**
-     * Search products based on current criteria
-     */
     public function searchAction()
     {
         $numberPage = 1;
         if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Products", $this->request->getPost());
+            $query = Criteria::fromInput($this->di, "Yourcode", $this->request->getPost());
             $this->persistent->searchParams = $query->getParams();
         } else {
             $numberPage = $this->request->getQuery("page", "int");
@@ -43,98 +38,90 @@ class ProductsController extends ControllerBase
             $parameters = $this->persistent->searchParams;
         }
 
-        $products = Products::find($parameters);
-        if (count($products) == 0) {
-            $this->flash->notice("The search did not find any products");
+        $yourcode = Yourcode::find($parameters);
+        if (count($yourcode) == 0) {
+            $this->flash->notice("The search did not find any code");
 
             return $this->dispatcher->forward(
                 [
-                    "controller" => "products",
+                    "controller" => "yourcode",
                     "action"     => "index",
                 ]
             );
         }
 
         $paginator = new Paginator(array(
-            "data"  => $products,
+            "data"  => $yourcode,
             "limit" => 10,
             "page"  => $numberPage
         ));
 
         $this->view->page = $paginator->getPaginate();
+        $this->view->yourcode = $yourcode;
     }
 
-    /**
-     * Shows the form to create a new product
-     */
     public function newAction()
     {
-        $this->view->form = new ProductsForm(null, array('edit' => true));
+        $this->view->form = new YourcodeForm(null, array('edit' => true));
     }
 
-    /**
-     * Edits a product based on its id
-     */
     public function editAction($id)
     {
 
         if (!$this->request->isPost()) {
 
-            $product = Products::findFirstById($id);
-            if (!$product) {
-                $this->flash->error("Product was not found");
+            $yourcode = Yourcode::findFirstById($id);
+            if (!$yourcode) {
+                $this->flash->error("Your code was not found");
 
                 return $this->dispatcher->forward(
                     [
-                        "controller" => "products",
+                        "controller" => "yourcode",
                         "action"     => "index",
                     ]
                 );
             }
 
-            $this->view->form = new ProductsForm($product, array('edit' => true));
+            $this->view->form = new YourcodeForm($yourcode, array('edit' => true));
         }
     }
 
-    /**
-     * Creates a new product
-     */
     public function createAction()
     {
         if (!$this->request->isPost()) {
             return $this->dispatcher->forward(
                 [
-                    "controller" => "products",
+                    "controller" => "yourcode",
                     "action"     => "index",
                 ]
             );
         }
 
-        $form = new ProductsForm;
-        $product = new Products();
+        $form = new YourcodeForm;
+        $yourcode = new Yourcode();
 
         $data = $this->request->getPost();
-        if (!$form->isValid($data, $product)) {
+        if (!$form->isValid($data, $yourcode)) {
             foreach ($form->getMessages() as $message) {
                 $this->flash->error($message);
             }
 
             return $this->dispatcher->forward(
                 [
-                    "controller" => "products",
+                    "controller" => "yourcode",
                     "action"     => "new",
                 ]
             );
         }
 
-        if ($product->save() == false) {
-            foreach ($product->getMessages() as $message) {
+        if ($yourcode->save() == false) {
+            foreach ($yourcode->getMessages() as $message) {
                 $this->flash->error($message);
             }
 
             return $this->dispatcher->forward(
                 [
-                    "controller" => "products",
+                    "controller" => "yourcode",
                     "action"     => "new",
                 ]
             );
@@ -142,131 +129,116 @@ class ProductsController extends ControllerBase
 
         $form->clear();
 
-        $this->flash->success("Product was created successfully");
+        $this->flash->success("Your Code was created successfully");
 
         return $this->dispatcher->forward(
             [
-                "controller" => "products",
+                "controller" => "yourcode",
                 "action"     => "index",
             ]
         );
     }
 
-    /**
-     * Saves current product in screen
-     *
-     * @param string $id
-     */
     public function saveAction()
     {
         if (!$this->request->isPost()) {
             return $this->dispatcher->forward(
                 [
-                    "controller" => "products",
+                    "controller" => "yourcode",
                     "action"     => "index",
                 ]
             );
         }
 
         $id = $this->request->getPost("id", "int");
-
-        $product = Products::findFirstById($id);
-        if (!$product) {
-            $this->flash->error("Product does not exist");
+        $yourcode = Yourcode::findFirstById($id);
+        if (!$yourcode) {
+            $this->flash->error("Your Code does not exist");
 
             return $this->dispatcher->forward(
                 [
-                    "controller" => "products",
+                    "controller" => "yourcode",
                     "action"     => "index",
                 ]
             );
         }
 
-        $form = new ProductsForm;
-        $this->view->form = $form;
+        $form = new YourcodeForm;
 
         $data = $this->request->getPost();
-
-        if (!$form->isValid($data, $product)) {
+        if (!$form->isValid($data, $yourcode)) {
             foreach ($form->getMessages() as $message) {
                 $this->flash->error($message);
             }
 
             return $this->dispatcher->forward(
                 [
-                    "controller" => "products",
-                    "action"     => "edit",
-                    "params"     => [$id]
+                    "controller" => "yourcode",
+                    "action"     => "new",
                 ]
             );
         }
 
-        if ($product->save() == false) {
-            foreach ($product->getMessages() as $message) {
+        if ($yourcode->save() == false) {
+            foreach ($yourcode->getMessages() as $message) {
                 $this->flash->error($message);
             }
 
             return $this->dispatcher->forward(
                 [
-                    "controller" => "products",
-                    "action"     => "edit",
-                    "params"     => [$id]
+                    "controller" => "yourcode",
+                    "action"     => "new",
                 ]
             );
         }
 
         $form->clear();
 
-        $this->flash->success("Product was updated successfully");
+        $this->flash->success("Your Code was updated successfully");
 
         return $this->dispatcher->forward(
             [
-                "controller" => "products",
+                "controller" => "yourcode",
                 "action"     => "index",
             ]
         );
     }
 
-    /**
-     * Deletes a product
-     *
-     * @param string $id
-     */
     public function deleteAction($id)
     {
 
-        $products = Products::findFirstById($id);
-        if (!$products) {
-            $this->flash->error("Product was not found");
+        $yourcode = Yourcode::findFirstById($id);
+        if (!$yourcode) {
+            $this->flash->error("Your Code was not found");
 
             return $this->dispatcher->forward(
                 [
-                    "controller" => "products",
+                    "controller" => "yourcode",
                     "action"     => "index",
                 ]
             );
         }
 
-        if (!$products->delete()) {
-            foreach ($products->getMessages() as $message) {
+        if (!$yourcode->delete()) {
+            foreach ($yourcode->getMessages() as $message) {
                 $this->flash->error($message);
             }
 
             return $this->dispatcher->forward(
                 [
-                    "controller" => "products",
+                    "controller" => "yourcode",
                     "action"     => "search",
                 ]
             );
         }
 
-        $this->flash->success("Product was deleted");
+        $this->flash->success("Your Code was deleted");
 
-            return $this->dispatcher->forward(
-                [
-                    "controller" => "products",
-                    "action"     => "index",
-                ]
-            );
+        return $this->dispatcher->forward(
+            [
+                "controller" => "yourcode",
+                "action"     => "index",
+            ]
+        );
     }
 }

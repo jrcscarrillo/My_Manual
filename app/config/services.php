@@ -1,112 +1,142 @@
 <?php
 
 use Phalcon\Mvc\View;
-use Phalcon\Mvc\View\Engine\Php as PhpEngine;
-use Phalcon\Mvc\Url as UrlResolver;
+use Phalcon\Mvc\Dispatcher;
+use Phalcon\Mvc\Router as ruta;
+use Phalcon\Mvc\Url as UrlProvider;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
-use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
+use Phalcon\Mvc\Model\Metadata\Memory as MetaData;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
-use Phalcon\Flash\Direct as Flash;
+use Phalcon\Flash\Session as FlashSession;
+use Phalcon\Events\Manager as EventsManager;
 
-/**
- * Shared configuration service
- */
-$di->setShared('config', function () {
-    return include APP_PATH . "/config/config.php";
-});
+class Services extends \Base\Services {
 
-/**
- * The URL component is used to generate all kind of urls in the application
- */
-$di->setShared('url', function () {
-    $config = $this->getConfig();
+    /**
+     * We register the events manager
+     */
+    protected function initDispatcher() {
+        $eventsManager = new EventsManager;
 
-    $url = new UrlResolver();
-    $url->setBaseUri($config->application->baseUri);
+        /**
+         * Check if the user is allowed to access certain action using the SecurityPlugin
+         */
+        $eventsManager->attach('dispatch:beforeDispatch', new SecurityPlugin);
 
-    return $url;
-});
+        /**
+         * Handle exceptions and not-found exceptions using NotFoundPlugin
+         */
+        $eventsManager->attach('dispatch:beforeException', new NotFoundPlugin);
 
-/**
- * Setting up the view component
- */
-$di->setShared('view', function () {
-    $config = $this->getConfig();
+        $dispatcher = new Dispatcher;
+        $dispatcher->setEventsManager($eventsManager);
 
-    $view = new View();
-    $view->setDI($this);
-    $view->setViewsDir($config->application->viewsDir);
-
-    $view->registerEngines([
-        '.volt' => function ($view) {
-            $config = $this->getConfig();
-
-            $volt = new VoltEngine($view, $this);
-
-            $volt->setOptions([
-                'compiledPath' => $config->application->cacheDir,
-                'compiledSeparator' => '_'
-            ]);
-
-            return $volt;
-        },
-        '.phtml' => PhpEngine::class
-
-    ]);
-
-    return $view;
-});
-
-/**
- * Database connection is created based in the parameters defined in the configuration file
- */
-$di->setShared('db', function () {
-    $config = $this->getConfig();
-
-    $class = 'Phalcon\Db\Adapter\Pdo\\' . $config->database->adapter;
-    $params = [
-        'host'     => $config->database->host,
-        'username' => $config->database->username,
-        'password' => $config->database->password,
-        'dbname'   => $config->database->dbname,
-        'charset'  => $config->database->charset
-    ];
-
-    if ($config->database->adapter == 'Postgresql') {
-        unset($params['charset']);
+        return $dispatcher;
     }
 
-    $connection = new $class($params);
+    /**
+     * The URL component is used to generate all kind of urls in the application
+     */
+    protected function initUrl() {
+        $url = new UrlProvider();
+        $url->setBaseUri($this->get('config')->application->baseUri);
+        return $url;
+    }
 
-    return $connection;
-});
+    protected function initView() {
+        $view = new View();
 
+        $view->setViewsDir(APP_PATH . $this->get('config')->application->viewsDir);
 
-/**
- * If the configuration specify the use of metadata adapter use it or use memory otherwise
- */
-$di->setShared('modelsMetadata', function () {
-    return new MetaDataAdapter();
-});
+        $view->registerEngines(array(
+            ".volt" => 'volt'
+        ));
 
-/**
- * Register the session flash service with the Twitter Bootstrap classes
- */
-$di->set('flash', function () {
-    return new Flash([
-        'error'   => 'alert alert-danger',
-        'success' => 'alert alert-success',
-        'notice'  => 'alert alert-info',
-        'warning' => 'alert alert-warning'
-    ]);
-});
+        return $view;
+    }
 
-/**
- * Start the session the first time some component request the session service
- */
-$di->setShared('session', function () {
-    $session = new SessionAdapter();
-    $session->start();
+    /**
+     * Setting up volt
+     */
+    protected function initSharedVolt($view, $di) {
+        $volt = new VoltEngine($view, $di);
 
-    return $session;
-});
+        $volt->setOptions(array(
+            "compiledPath" => APP_PATH . "cache/volt/"
+        ));
+
+        $compiler = $volt->getCompiler();
+        $compiler->addFunction('is_a', 'is_a');
+
+        return $volt;
+    }
+
+    /**
+     * Database connection is created based in the parameters defined in the configuration file
+     */
+    protected function initDb() {
+        $config = $this->get('config')->get('database')->toArray();
+
+        $dbClass = 'Phalcon\Db\Adapter\Pdo\\' . $config['adapter'];
+        unset($config['adapter']);
+
+        return new $dbClass($config);
+    }
+
+    /**
+     * If the configuration specify the use of metadata adapter use it or use memory otherwise
+     */
+    protected function initModelsMetadata() {
+        return new MetaData();
+    }
+
+    /**
+     * Start the session the first time some component request the session service
+     */
+    protected function initSession() {
+        $session = new SessionAdapter();
+        $session->start();
+        return $session;
+    }
+
+    /**
+     * Register the flash service with custom CSS classes
+     */
+    protected function initFlash() {
+        return new FlashSession(array(
+            'error' => 'alert alert-danger',
+            'success' => 'alert alert-success',
+            'notice' => 'alert alert-info',
+            'warning' => 'alert alert-warning'
+        ));
+    }
+
+    /**
+     * Register a user component
+     */
+    protected function initElements() {
+        return new Elements();
+    }
+
+    /**
+     * Registra otros componentes
+     */
+
+    protected function initRouter() {
+        $em = new EventsManager();
+        $router = new ruta();
+        $router->add(
+                '/:controller/:action/:params', [
+            'controller' => 1,
+            'action' => 2,
+            'params' => 3
+                ]
+        );
+
+        $em->attach('router', new RouterListener);
+        $router->setEventsManager($em);
+
+        return $router;
+    }
+
+}

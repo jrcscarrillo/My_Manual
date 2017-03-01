@@ -1,12 +1,11 @@
-<div class="jumbotron">
-<div class = "container">
+{{ content() }}
+<div class = "container bg-success">
     <h1>Welcome to MY MANUAL</h1>
     <p>MY MANUAL is a helpful application to study and search PHP code online.
     We are willing to accept any comments and sugestions.</p>
     <p>{{ link_to('register', 'Try it please &raquo;', 'class': 'btn btn-primary btn-large btn-success') }}</p>
 </div>
-</div>
-<div class="container">
+<div class="container bg-info">
 <div class="row">
     <div class="col-md-4">
         <h2 class="bg-danger">PHP Arrays</h2>
@@ -18,7 +17,7 @@
             See also Array operators for other ways how to manipulate the arrays. </p>
     </div>
     <div class="col-md-4">
-        <h2 class="bg-success">PHP PDO</h2>
+        <h2 class="bg-danger">PHP PDO</h2>
         <p>The PHP Data Objects (PDO) extension defines a lightweight, consistent interface for accessing databases in PHP. 
             Each database driver that implements the PDO interface can expose database-specific features as regular extension functions. 
             Note that you cannot perform any database functions using the PDO extension by itself; 
@@ -31,7 +30,7 @@
             PDO requires the new OO features in the core of PHP 5, and so will not run with earlier versions of PHP.</p>
     </div>
     <div class="col-md-4">
-        <h2 class="bg-info">PHP Code Snippets</h2>
+        <h2 class="bg-danger">PHP Code Snippets</h2>
         <p>In programming practice, "snippet" refers narrowly to a portion of source code that is literally included by 
             an editor program into a file, and is a form of copy and paste programming. 
             This concrete inclusion is in contrast to abstraction methods, such as functions or macros, 

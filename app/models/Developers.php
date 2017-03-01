@@ -3,13 +3,14 @@
 use Phalcon\Validation;
 use Phalcon\Mvc\Model\Validator\Email as EmailValidator;
 
-class Users extends \Phalcon\Mvc\Model
+class Developers extends \Phalcon\Mvc\Model
 {
 
     /**
      *
      * @var integer
      * @Primary
+     * @Identity
      * @Column(type="integer", length=11, nullable=false)
      */
     public $id;
@@ -17,44 +18,37 @@ class Users extends \Phalcon\Mvc\Model
     /**
      *
      * @var string
-     * @Column(type="string", length=32, nullable=false)
+     * @Column(type="string", length=45, nullable=false)
      */
-    public $username;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", length=40, nullable=false)
-     */
-    public $password;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", length=120, nullable=false)
-     */
-    public $name;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", length=70, nullable=false)
-     */
-    public $email;
+    public $fullname;
 
     /**
      *
      * @var string
      * @Column(type="string", nullable=false)
      */
-    public $createdAt;
+    public $dateEnrolled;
 
     /**
      *
      * @var string
-     * @Column(type="string", length=1, nullable=false)
+     * @Column(type="string", length=45, nullable=false)
      */
-    public $active;
+    public $email;
+
+    /**
+     *
+     * @var string
+     * @Column(type="string", length=100, nullable=false)
+     */
+    public $address;
+
+    /**
+     *
+     * @var string
+     * @Column(type="string", length=25, nullable=false)
+     */
+    public $telephone;
 
     /**
      * Validations and business logic
@@ -84,7 +78,7 @@ class Users extends \Phalcon\Mvc\Model
     public function initialize()
     {
         $this->setSchema("knoll");
-        $this->hasMany('id', 'Yourcode', 'userId', ['alias' => 'Yourcode']);
+        $this->hasMany('id', 'Code', 'developerId', ['alias' => 'Code']);
     }
 
     /**
@@ -94,14 +88,14 @@ class Users extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'users';
+        return 'developers';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Users[]|Users
+     * @return Developers[]|Developers
      */
     public static function find($parameters = null)
     {
@@ -112,7 +106,7 @@ class Users extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Users
+     * @return Developers
      */
     public static function findFirst($parameters = null)
     {
